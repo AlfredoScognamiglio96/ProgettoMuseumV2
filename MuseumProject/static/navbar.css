@@ -33,4 +33,15 @@
   left: 50%;
   transform: translate(-50%, -50%);
   color: white;
+
+}
+
+.hero-text h1 {
+  font-size:100px;
+}
+
+@media screen and (max-width: 500px) {
+  .hero-image {
+    width: 500px;
+  }
 }
