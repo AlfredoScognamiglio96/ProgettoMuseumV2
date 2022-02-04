@@ -1,18 +1,26 @@
 {% extends "layout.html" %}
 {% block content %}
+
+    <div class="hero-image">
+        <div class="hero-text">
+            <h1 style="font-size:50px">WELCOME</h1>
+        </div>
+    </div>
+
     {% for post in posts %}
-        <article class="media content-section">
-            <img class="rounded-circle article-img" src="{{ url_for('static', filename='images/' + post.poster.image_file) }}">
-            <div class="media-body">
-                <!-- NOME AUTORE E DATA POST -->
-                <div class="article-metadata">
-                    <a class="mr-2" href="{{ url_for('admin_posts', first_name=post.poster.first_name) }}">{{ post.poster.first_name }}</a>
-                    <small class="text-muted">{{ post.date_posted.strftime('%d-%m-%Y') }}</small>
-                </div>
-                <!-- TITOLO POST E DESCRIZIONE -->
+
+        <div class="card mb-3 ">
+            <img src="../static/images/depositphotos_26253337-stock-photo-earth-sunrise-north-america-with.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
                 <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
-                <p class="article-content">{{ post.descrizione }}</p>
+                <p class="card-text">{{ post.descrizione }}</p>
+                <p class="card-text"><small class="text-muted">Last updated {{ post.date_posted.strftime('%d-%m-%Y') }}</small></p>
+                <p class="card-title"><a class="mr-2" href="{{ url_for('admin_posts', first_name=post.poster.first_name) }}">by {{ post.poster.first_name }}</a></p>
             </div>
-        </article>
+        </div>
+<br>
+
+
+
     {% endfor %}
 {% endblock content %}
