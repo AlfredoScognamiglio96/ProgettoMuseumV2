@@ -33,7 +33,13 @@
                     {{ form.descrizione(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
+            <!-- IMMAGINE POST -->      <!-- AGGIUNTA QUI -->
+            <div class="form-group">
+                {{ form.image_file.label() }}
+                {{ form.image_file(class="form-control-file") }}
+            </div>
         </fieldset>
+        <!-- SUBMIT BUTTON -->
         <div class="form-group">
             {{ form.submit(class="btn btn-outline-info") }}
         </div>

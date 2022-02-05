@@ -67,12 +67,12 @@ def account():
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(title=form.title.data, descrizione=form.descrizione.data, poster=current_user)
+        post = Post(title=form.title.data, descrizione=form.descrizione.data,immagine=form.immagine.data, poster=current_user)          #IMMAGINE=FORM... ADD
         db.session.add(post)
         db.session.commit()
         flash('Post creato!', 'success')
         return redirect(url_for('home'))
-    return render_template('create_post.html', title='New Post', form=form, legend='New Post')
+    return render_template('create_post.html', title='New Post',form=form, legend='New Post')
 
 #Route che gestisce l inserimento dell id del post all interno della route stessa
 @app.route("/post/<int:post_id>")
