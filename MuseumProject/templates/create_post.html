@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="content-section">
-    <form method="POST" action="">
+    <form method="POST" action="" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
             <legend class="border-bottom mb-4">{{ legend }}</legend>
@@ -35,8 +35,8 @@
             </div>
             <!-- IMMAGINE POST -->      <!-- AGGIUNTA QUI -->
             <div class="form-group">
-                {{ form.image_file.label() }}
-                {{ form.image_file(class="form-control-file") }}
+                {{ form.image_post.label() }}
+                {{ form.image_post(class="form-control-file") }}
             </div>
         </fieldset>
         <!-- SUBMIT BUTTON -->

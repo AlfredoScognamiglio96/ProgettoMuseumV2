@@ -8,7 +8,7 @@
     {% for post in posts %}
         <!-- IMMAGINE POST -->
         <div class="card mb-3 ">
-            <img src="../static/images/depositphotos_26253337-stock-photo-earth-sunrise-north-america-with.jpg" class="card-img-top" alt="...">
+            <img src="{{ image_post }}" class="card-img-top">
             <div class="card-body">
                 <!-- TITOLO, DESCRIZIONE , DATA E NOME ADMIN DEL POST -->
                 <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
@@ -17,5 +17,6 @@
                 <p class="card-title"><a class="mr-2" href="{{ url_for('admin_posts', first_name=post.poster.first_name) }}">by {{ post.poster.first_name }}</a></p>
             </div>
         </div>
+        <br><br><br>
     {% endfor %}
 {% endblock content %}
