@@ -21,5 +21,5 @@ class Post(db.Model):
     title = db.Column(db.String(100), nullable=False)
     descrizione = db.Column(db.Text, nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    image_post = db.Column(db.String(20), nullable=False, default='defaultPNG.png')             #NEW LINE ADD
+    post_image = db.Column(db.String(20), nullable=False, default='defaultPNG.png')             #NEW LINE ADD
     admin_id = db.Column(db.Integer, db.ForeignKey('administrator.id'), nullable=False)         #Chiave esterna che fa riferimento alla tab.Administrator

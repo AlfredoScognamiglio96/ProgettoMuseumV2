@@ -46,6 +46,17 @@ def save_profile_image(form_profile_image):
     i.save(profile_image_path)
     return  profile_image_fn
 
+#Funzione per salvare l immagine del post
+def save_post_image(form_post_image):
+    file_extension = os.path.join(form_post_image.filename)
+    post_image_fn = file_extension
+    post_image_path = os.path.join(app.root_path, 'static/images', post_image_fn)
+    output_size = (500,500)
+    k = Image.open(form_post_image)
+    k.thumbnail(output_size)
+    k.save(post_image_path)
+    return post_image_fn
+
 
 @app.route("/account", methods=['GET', 'POST'])
 @login_required                                                         #Per accedere a questa route dobbiamo essere prima loggati
@@ -67,12 +78,16 @@ def account():
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(title=form.title.data, descrizione=form.descrizione.data,image_post=form.image_post.data, poster=current_user)          #IMMAGINE=FORM... ADD
+        if form.profile_post.data:
+            picture_post = save_post_image(form.profile_post.data)
+            current_user.post_image = picture_post
+        post = Post(title=form.title.data, descrizione=form.descrizione.data,post_image=form.profile_post.data, poster=current_user)          #IMMAGINE=FORM... ADD
         db.session.add(post)
         db.session.commit()
         flash('Post creato!', 'success')
         return redirect(url_for('home'))
-    return render_template('create_post.html', title='New Post',form=form, legend='New Post')
+    post_image = url_for('static', filename='images/' + current_user.post_image)
+    return render_template('create_post.html', title='New Post', post_image=post_image, form=form, legend='New Post')
 
 #Route che gestisce l inserimento dell id del post all interno della route stessa
 @app.route("/post/<int:post_id>")
@@ -91,14 +106,14 @@ def update_post(post_id):
     if form.validate_on_submit():
         post.title = form.title.data
         post.descrizione = form.descrizione.data
-        post.image_post = form.image_post.data
+        post.image_post = form.profile_post.data
         db.session.commit()
         flash('Post aggiornato!', 'success')
         return redirect(url_for('post', post_id=post.id))
     elif request.method == 'GET':
          form.title.data = post.title
          form.descrizione.data = post.descrizione
-         form.image_post.data = post.image_post
+         form.profile_post.data = post.image_post
     return render_template('create_post.html', title='Update Post', form=form, legend='Update Post')
 
 #Route con cui vengono eliminati solo i post dell utente loggato nella sessione

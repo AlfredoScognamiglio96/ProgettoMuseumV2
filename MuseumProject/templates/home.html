@@ -8,7 +8,7 @@
     {% for post in posts %}
         <!-- IMMAGINE POST -->
         <div class="card mb-3 ">
-            <img src="{{ image_post }}" class="card-img-top">
+            <img src="{{ url_for('static', filename='images/' + post.post_image) }}" class="card-img-top">
             <div class="card-body">
                 <!-- TITOLO, DESCRIZIONE , DATA E NOME ADMIN DEL POST -->
                 <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>

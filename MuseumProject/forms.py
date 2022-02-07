@@ -11,11 +11,12 @@ class LoginForm(FlaskForm):
 
 class UpdateAccountForm(FlaskForm):
     profile_image = FileField('Update Profile Picture', validators=[FileAllowed(['jpg','png'])])
+   # post_image = FileField('Update Post Picture', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Update')
 
 
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     descrizione = TextAreaField('Content', validators=[DataRequired()])
-    image_post = FileField('Image Post', validators=[FileAllowed(['jpg','png'])])             #NEW LINE ADD
+    profile_post = FileField('Image Post', validators=[FileAllowed(['jpg','png'])])             #NEW LINE ADD
     submit = SubmitField('Post')
