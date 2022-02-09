@@ -61,8 +61,8 @@ def save_post_image(form_post_image):
 @app.route("/account", methods=['GET', 'POST'])
 @login_required                                                         #Per accedere a questa route dobbiamo essere prima loggati
 def account():
-    form = UpdateAccountForm()
-    if form.validate_on_submit():
+    form = UpdateAccountForm()                                          #Istanza del form
+    if form.validate_on_submit():                                       #If che parte dopo la validazione corretta
         if form.profile_image.data:
              picture_file = save_profile_image(form.profile_image.data)
              current_user.image_file = picture_file
@@ -81,12 +81,17 @@ def new_post():
         if form.profile_post.data:
             picture_post = save_post_image(form.profile_post.data)
             current_user.post_image = picture_post
-        post = Post(title=form.title.data, descrizione=form.descrizione.data,post_image=form.profile_post.data, poster=current_user)          #IMMAGINE=FORM... ADD
+        post = Post(title=form.title.data, descrizione=form.descrizione.data,post_image=form.profile_post.data.filename, admin_id=current_user.get_id())            #modifica effettuata qui
         db.session.add(post)
         db.session.commit()
         flash('Post creato!', 'success')
         return redirect(url_for('home'))
-    post_image = url_for('static', filename='images/' + current_user.post_image)
+    id = current_user.get_id()                                          #modifica effettuata qui
+    #admin_logged = Administrator.query.filter_by(id=id).first()
+    post_user = Post.query.filter_by(id=id).first()                     #modifica effettuata qui
+    print(id)
+    print(post_user.post_image)
+    post_image = url_for('static', filename='images/' + post_user.post_image)
     return render_template('create_post.html', title='New Post', post_image=post_image, form=form, legend='New Post')
 
 #Route che gestisce l inserimento dell id del post all interno della route stessa

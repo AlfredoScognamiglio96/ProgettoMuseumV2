@@ -10,7 +10,7 @@
     </div>
     <!--FORM HERE-->
         <form method="POST" action="" enctype="multipart/form-data">
-            {{ form.hidden_tag() }}
+            {{ form.hidden_tag() }}                                               <!-- hidden_tag crea un campo nascosto contenente un token utilizzato per proteggere il modulo dagli attacchi CSRF-->
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Account Info</legend>
                 <div class="form-group">
