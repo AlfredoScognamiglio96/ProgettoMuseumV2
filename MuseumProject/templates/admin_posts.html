@@ -11,9 +11,11 @@
                     <small class="text-muted">{{ post.date_posted.strftime('%d-%m-%Y') }}</small>
                 </div>
                 <!-- TITOLO POST E DESCRIZIONE -->
+                <img src="{{ url_for('static', filename='images/' + post.post_image) }}" class="card-img-top">
                 <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
                 <p class="article-content">{{ post.descrizione }}</p>
             </div>
+            <br><br>
         </article>
     {% endfor %}
 {% endblock content %}

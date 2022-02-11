@@ -37,6 +37,9 @@
             <div class="form-group">
                 {{ form.profile_post.label() }}
                 {{ form.profile_post(class="form-control-file") }}
+                {% if form.profile_post.errors %}
+                    {{ form.profile_post(class="form-control form-control-lg is-invalid") }}
+                {% endif %}
             </div>
         </fieldset>
         <!-- SUBMIT BUTTON -->

@@ -4,6 +4,7 @@
     <img class="rounded-circle article-img" src="{{ url_for('static', filename='images/' + post.poster.image_file) }}">
     <div class="media-body">
       <div class="article-metadata">
+      <img src="{{ url_for('static', filename='images/' + post.post_image) }}" class="card-img-top">
         <a class="mr-2" href="{{ url_for('admin_posts', first_name=post.poster.first_name) }}">{{ post.poster.username }}</a>
         <small class="text-muted">{{ post.date_posted.strftime('%d-%m-%Y') }}</small>
         {% if post.poster == current_user %}
