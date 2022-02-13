@@ -86,12 +86,10 @@ def new_post():
         db.session.commit()
         flash('Post creato!', 'success')
         return redirect(url_for('home'))
-    id = current_user.get_id()                                          #modifica effettuata qui
+    #id = current_user.get_id()                                          #modifica effettuata qui
     #admin_logged = Administrator.query.filter_by(id=id).first()
-    post_user = Post.query.filter_by(id=id).first()                     #modifica effettuata qui
-    #print(id)
-    #print(post_user.post_image)
     post_image = url_for('static', filename='images/defaultPNG.png')
+    print(post_image)
     return render_template('create_post.html', title='New Post', post_image=post_image, form=form, legend='New Post')
 
 
@@ -109,18 +107,26 @@ def update_post(post_id):
     if post.poster != current_user:
         abort(403)                                                          #403 è la risposta http per un percorso proibito
     form = PostForm()
+    if form.profile_post.data:
+        picture_post = save_post_image(form.profile_post.data)
+        current_user.post_image = picture_post
     if form.validate_on_submit():
         post.title = form.title.data
         post.descrizione = form.descrizione.data
-        post.image_post = form.profile_post.data
+        post.post_image = picture_post
+        #post_image = url_for('static',  filename='images/' + current_user.post_image)
+        #print(post.title)
+        #print(post.descrizione)
+        #print(post.post_image)
         db.session.commit()
+        #print(post.post_image)
         flash('Post aggiornato!', 'success')
         return redirect(url_for('post', post_id=post.id))
     elif request.method == 'GET':
          form.title.data = post.title
          form.descrizione.data = post.descrizione
-         form.profile_post.data = post.image_post
-    return render_template('create_post.html', title='Update Post', form=form, legend='Update Post')
+         form.profile_post.data = post.post_image
+    return render_template('create_post.html', title='Update Post',form=form, legend='Update Post')
 
 #Route con cui vengono eliminati solo i post dell utente loggato nella sessione
 @app.route("/post/<int:post_id>/delete", methods=['POST'])
