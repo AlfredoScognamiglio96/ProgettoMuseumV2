@@ -81,7 +81,7 @@ def new_post():
         if form.profile_post.data:
             picture_post = save_post_image(form.profile_post.data)
             current_user.post_image = picture_post
-        post = Post(title=form.title.data, descrizione=form.descrizione.data,post_image=form.profile_post.data.filename, admin_id=current_user.get_id())            #modifica effettuata qui
+        post = Post(title=form.title.data, descrizione=form.descrizione.data, post_image=form.profile_post.data.filename, admin_id=current_user.get_id())            #modifica effettuata qui
         db.session.add(post)
         db.session.commit()
         flash('Post creato!', 'success')
@@ -89,10 +89,11 @@ def new_post():
     id = current_user.get_id()                                          #modifica effettuata qui
     #admin_logged = Administrator.query.filter_by(id=id).first()
     post_user = Post.query.filter_by(id=id).first()                     #modifica effettuata qui
-    print(id)
-    print(post_user.post_image)
-    post_image = url_for('static', filename='images/' + post_user.post_image)
+    #print(id)
+    #print(post_user.post_image)
+    post_image = url_for('static', filename='images/defaultPNG.png')
     return render_template('create_post.html', title='New Post', post_image=post_image, form=form, legend='New Post')
+
 
 #Route che gestisce l inserimento dell id del post all interno della route stessa
 @app.route("/post/<int:post_id>")
