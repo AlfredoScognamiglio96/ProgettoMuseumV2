@@ -5,6 +5,19 @@
             <h1>WELCOME</h1>
         </div>
     </div>
+
+    <div class="col-md-8">
+    {% with messages = get_flashed_messages(with_categories=true)  %}           <!-- funzione per catturare i flash messages -->
+            {% if messages %}
+                {% for category,message in messages %}
+                <div class="alert alert-{{ category }}">
+                {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
     {% for post in posts %}
         <!-- IMMAGINE POST -->
         <div class="card mb-3 ">
