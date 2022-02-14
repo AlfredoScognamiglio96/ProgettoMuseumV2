@@ -10,7 +10,7 @@ class LoginForm(FlaskForm):
 
 
 class UpdateAccountForm(FlaskForm):
-    profile_image = FileField('Update Profile Picture', validators=[FileAllowed(['jpg','png'])])
+    profile_image = FileField('Update Profile Picture', validators=[FileAllowed(['jpg','png'])])            #FileAllowed usato per permettere i tipi di immagini passate come argomento
     submit = SubmitField('Update')
 
 

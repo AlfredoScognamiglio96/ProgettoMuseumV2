@@ -1,27 +1,27 @@
 import os
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, abort, request
-from MuseumProject import app,db
-from MuseumProject.forms import LoginForm, UpdateAccountForm, PostForm
-from MuseumProject.models import Administrator, Post
+from MuseumProject import app,db                                                                  #Importo app per usare i decorator @app
+from MuseumProject.forms import LoginForm, UpdateAccountForm, PostForm                            #Importo i Form tramite il modulo forms
+from MuseumProject.models import Administrator, Post                                              #Importo le Classi tramite il modulo models
 from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route("/")
 @app.route("/home")
 def home():
-    posts = Post.query.all()
+    posts = Post.query.all()                                                        #Query per ottenere tutti i post del DB
     return render_template('home.html', posts=posts)
 
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated:
+    if current_user.is_authenticated:                                                                #Se l admin è già loggato ci riporta alla home
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        admin = Administrator.query.filter_by(email=form.email.data).first()                         #Query login
-        if admin and Administrator.query.filter_by(password=form.password.data).first():
-            login_user(admin)
+        admin = Administrator.query.filter_by(email=form.email.data).first()                         #Query per controllare l email immessa con quelle presenti nel DB
+        if admin and Administrator.query.filter_by(password=form.password.data).first():             #Condizione per controllare se esiste l admin e la password immessa
+            login_user(admin)                                                                        #Admin loggato
             return redirect(url_for('home'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
@@ -30,20 +30,18 @@ def login():
 
 @app.route("/logout")
 def logout():
-    logout_user()
+    logout_user()                                                                                   #Funzione per effettuare il logout
     return redirect(url_for('home'))
 
 #Funzione per salvare l immagine del profilo
 def save_profile_image(form_profile_image):
-    #random_hex = secrets.token_hex(8)
     file_extension = os.path.join(form_profile_image.filename)
-    profile_image_fn = file_extension  #random_hex +
-#Tramite il join utilizzo il percorso fino alla radice dove viene recuperata l immagine
-    profile_image_path = os.path.join(app.root_path, 'static/images', profile_image_fn)
+    profile_image_fn = file_extension
+    profile_image_path = os.path.join(app.root_path, 'static/images', profile_image_fn)             #Tramite il join utilizzo il percorso fino alla radice dove viene recuperata l immagine
     output_size = (125,125)
     i = Image.open(form_profile_image)
     i.thumbnail(output_size)
-    i.save(profile_image_path)
+    i.save(profile_image_path)                                                                      #Salvataggio dell immagine nel path creato in precedenza
     return  profile_image_fn
 
 #Funzione per salvare l immagine del post
@@ -64,12 +62,12 @@ def account():
     form = UpdateAccountForm()                                          #Istanza del form
     if form.validate_on_submit():                                       #If che parte dopo la validazione corretta
         if form.profile_image.data:
-             picture_file = save_profile_image(form.profile_image.data)
+             picture_file = save_profile_image(form.profile_image.data) #Utilizzo la function save_profile_image per salvare correttamente l immagine
              current_user.image_file = picture_file
         db.session.commit()
         flash('Immagine profilo aggiornata!', 'success')
         return redirect(url_for('account'))
-    image_file = url_for('static', filename='images/' + current_user.image_file)
+    image_file = url_for('static', filename='images/' + current_user.image_file)                        #Setto l immagine profilo dell'admin
     return render_template('account.html', title='Account', image_file=image_file, form=form)
 
 
@@ -81,13 +79,11 @@ def new_post():
         if form.profile_post.data:
             picture_post = save_post_image(form.profile_post.data)
             current_user.post_image = picture_post
-        post = Post(title=form.title.data, descrizione=form.descrizione.data, post_image=form.profile_post.data.filename, admin_id=current_user.get_id())            #modifica effettuata qui
-        db.session.add(post)
-        db.session.commit()
+        post = Post(title=form.title.data, descrizione=form.descrizione.data, post_image=form.profile_post.data.filename, admin_id=current_user.get_id())      #Creo una nuova istanza del post, passando tutti i campi
+        db.session.add(post)                #Aggiungo il post al DB
+        db.session.commit()                 #Effettuo il commit
         flash('Post creato!', 'success')
         return redirect(url_for('home'))
-    #id = current_user.get_id()                                          #modifica effettuata qui
-    #admin_logged = Administrator.query.filter_by(id=id).first()
     post_image = url_for('static', filename='images/defaultPNG.png')
     print(post_image)
     return render_template('create_post.html', title='New Post', post_image=post_image, form=form, legend='New Post')
@@ -101,10 +97,10 @@ def post(post_id):
 
 
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
-@login_required
+@login_required                                                             #Per fare l update bisogna essere prima loggati
 def update_post(post_id):
     post = Post.query.get_or_404(post_id)
-    if post.poster != current_user:
+    if post.poster != current_user:                                         #Solo il post che ha scritto quel post può effettuare l upgrade
         abort(403)                                                          #403 è la risposta http per un percorso proibito
     form = PostForm()
     if form.profile_post.data:
@@ -114,12 +110,7 @@ def update_post(post_id):
         post.title = form.title.data
         post.descrizione = form.descrizione.data
         post.post_image = picture_post
-        #post_image = url_for('static',  filename='images/' + current_user.post_image)
-        #print(post.title)
-        #print(post.descrizione)
-        #print(post.post_image)
         db.session.commit()
-        #print(post.post_image)
         flash('Post aggiornato!', 'success')
         return redirect(url_for('post', post_id=post.id))
     elif request.method == 'GET':
